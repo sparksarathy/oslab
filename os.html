@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=500, initial-scale=5.0">
+    <title>os</title>
+</head>
+<body>
+<h1>2</h1>
+    <textarea>
+
+        #include <stdio.h>
+            #include <unistd.h>
+            #include <stdlib.h>
+            #include <sys/types.h>
+            #include <sys/wait.h>
+            #include <fcntl.h>
+            
+            int main() {
+                int pid, status;
+                pid_t wait_result;
+            
+                printf("Parent process ID: %d\n", getpid());
+            
+                pid = fork();
+            
+                if (pid == -1) {
+                    perror("fork() failed");
+                    exit(1);
+                }
+            
+                if (pid == 0) {
+                    // Child process
+            
+                    printf("Child process ID: %d\n", getpid());
+            
+                    // Execute a new program using execvp
+                    char *args[] = {"ls", "-l", NULL};
+                    execvp("ls", args);
+            
+                    // The code below will only execute if execvp fails
+                    perror("execvp() failed");
+                    exit(1);
+                } else {
+                    // Parent process
+            
+                    // Wait for the child process to complete
+                    wait_result = wait(&status);
+            
+                    if (wait_result == -1) {
+                        perror("wait() failed");
+                        exit(1);
+                    }
+            
+                    printf("Child process ID %d has completed.\n", wait_result);
+            
+                    // Close a file descriptor
+                    int fd = open("example.txt", O_RDONLY);
+                    if (fd != -1) {
+                        close(fd);
+                        printf("File descriptor closed.\n");
+                    } else {
+                        perror("open() failed");
+                        exit(1);
+                    }
+                }
+            
+                return 0;
+            }
+    </textarea>
+
+    <h1>4</h1>>
+    <textarea>PROGRAM
+
+        #include<stdio.h>
+        
+        #include<stdlib.h>
+        
+        #include<pthread.h>
+        
+        #include<semaphore.h>
+        
+        #include<unistd.h>
+        
+        sem_t chopstick[5];
+        
+        void * philos(void *); void eat(int);
+        
+        int main()
+        
+        {int i,n[5]; pthread_t T[5]; for(i=0;i<5;i++)
+        
+        sem_init(&chopstick[i],0,1);
+        
+        for(i=0;i<5;i++){
+        
+        n[i]=i;
+        
+        pthread_create(&T[i],NULL,philos, (void *)&n[i]); }
+        
+        for(i=0;i<5;i++)
+        
+        pthread_join(T[i],NULL); }
+        
+        void * philos(void* n){
+        
+        int ph=*(int *)n;
+        
+        printf("Philosopher %d wants to eat\n",ph);
+        
+        printf("Philosopher %d tries to pick left chopstick\n",ph); sem_wait(&chopstick[ph]);
+        
+        printf("Philosopher %d picks the left chopstick\n",ph);
+        
+        printf("Philosopher %d tries to pick the right chopstick\n",ph);
+        
+        sem_wait(&chopstick [(ph+1)%5]);
+        
+        printf("Philosopher %d picks the right chopstick\n",ph); eat(ph);
+        
+        sleep(2);
+        
+        printf("Philosopher %d has finished eating\n",ph); sem_post(&chopstick [(ph+1)%5]);
+        
+        printf("Philosopher %d leaves the right chopstick\n",ph);
+        
+        sem_post(&chopstick[ph]); printf("Philosopher %d leaves the left chopstick\n",ph);}
+        
+        void eat(int ph){
+        
+        printf("Philosopher %d begins to eat\n",ph); }
+    </textarea>
+
+<h1>5a</h1>
+<textarea>
+    PROGRAM
+
+#include <stdio.h>
+
+int main() {
+
+int n=5, r=3, i, j, k;
+
+int alloc[5][3]=(0,0,1), (1, 0, 1),(2, 3, 2), (0, 0, 3)};
+
+int max[5][3]=((7, 6, 3), (3, 2, 2), (8, 0, 2), (2, 1, 2), (5,2,3));
+
+int avail[3]{2, 3, 2);
+
+int f[n], ans[n], ind = 0;
+ for (k = 0; k < n; k++){
+    f[k]=0;}
+
+int need[n][r];
+
+for (i=0; i < n; i++){ for (j=0; j <r; j++)
+
+need[i][j]=max[i][j] - alloc[i]; }
+
+int y = 0;
+
+for (k = 0; k < 5; k++) { for (i=0; i<n; i++){
+
+if (f[i]==0){
+
+int flag = 0;
+
+for (j=0;j<r; j++) { if (need[i][]]> avail[j]){
+
+flag = 1; break; }}
+
+if (flag == 0) { ans[ind++] = i;
+
+for (y = 0; y < r; y++)
+
+avail[y] + alloc[i][y]:
+
+f[i]= 1; }}}}
+
+printf("Th SAFE Sequence is as follows\n");
+
+for (i=0; i<n-1; i++)
+
+printf("%d", ans[i]);
+
+printf("%d", ans[n-1]);
+
+return (0); }
+</textarea>
+<h1>6</h1>
+<textarea>
+    PROGRAM
+
+#include<stdio.h>
+
+void main(){
+
+int memsize=15,pagesize,nofpage,p[100],frameno,offset,logadd,phyadd,i,choice=0;
+
+printf("\nYour memsize is %d ",memsize);
+
+printf("\nEnter page size:"); scanf("%d",&pagesize);
+
+nofpage-memsize/pagesize; for(i=0;i<nofpage;i++){
+
+printf("\nEnter the frame of page %d:",i+1); scanf("%d",&p[i]);)
+
+do{
+
+printf("\nEnter a logical address:");
+
+scanf("%d",&logadd);
+
+frameno-logadd/pagesize;
+
+offset-logadd%pagesize; phyadd=(p[frameno]*pagesize)+offset;
+
+printf("\nPhysical address is: %d", phyadd); printf("\nDo you want to continue(1/0)?:"");
+
+scanf("%d", &choice); while(choice==1):
+}
+</textarea>
+
+<h1>8</h1>
+<textarea>
+     PROGRAM
+
+#include<stdio.h>
+
+#include <stdlib.h>
+
+int seektime = 0;
+
+void fcfs(int sequence[], int head, int n){
+
+int temp = head; seektime = 0;
+
+printf("\n The Disk sequence is: \n");
+
+for(int i=0; i<n; i++){
+
+printf("%d", sequence[i]);
+
+seektime += abs(sequence[i]-temp);
+
+temp = sequence[i];}
+
+printf("\n\n Seek Time = %d", seektime);}
+
+void sstf(int sequence[], int head, int n){
+
+seektime = 0;
+
+int arr[n], min, temp, i, j, pos;
+
+for(i=0; i<n; i++){
+
+arr[i] = 0;}
+
+while(1){ min = 999;
+
+for(i=0; i<n; i++){
+
+if(arr[i] == 0){
+
+if(min abs(head - sequence[i])){ min = abs(head - sequence[i]);
+
+pos = i;}}}
+
+if(min == 999) break;
+
+arr[pos] = 1;
+
+seektime + min;
+
+head sequence[pos];
+
+printf(" > %d", sequence[pos]);}
+
+printf("\n\n Seek Time = %d", seektime);} void scan(int sequence[], int head, int n, int t){
+
+int temp, i, j; seektime = 0;
+printf("\n The Disk sequence is : \n");
+
+for(i=0;i<n;i++){
+
+for(j=i+1;j<n;j++){
+
+if(sequence[i]> sequence[j]){ temp sequence[i];
+
+sequence[i] = sequence[i]; sequence[j] = temp;}}}
+
+temp = head;
+
+for(i=0; i<n;i++){
+
+if(sequence[i]> head){ printf("%d", sequence[i]);
+
+seektime += abs(temp - sequence[i]);
+
+temp = sequence[i];}} seektime += abs(t-1 - sequence[i-1]);
+
+temp = t-1; for(i=n-1; i>=0; i--){
+
+if(head > sequence[i]){
+
+printf("%d", sequence[i]);
+
+seektime += abs(temp - sequence[i]);
+
+temp sequence[i];}}
+
+printf("\n\n Seek Time = %d", seektime);}
+
+void main(){ int n, t, i, head, temp, choice; printf("\n Enter number of disk request in queue: ");
+
+scanf("%d", &n);
+
+printf("Enter total number of tracks: ");
+
+scanf("%d", &t);
+
+int sequence[n]; printf("\n Enter the disk request sequence for a disk with %d tracks: ", t);
+
+for(i=0; i<n;i++){ scanf("%d", &sequence[i]);}
+
+printf("Enter the initial position of the R/W head: "); scanf("%d", &head);
+
+do ( printf("\n-
+
+printf("\n\n 1. FCFS \n 2. SSTF \n 3. SCAN \n 4. EXIT \n");
+
+-\n");
+
+printf("\n Enter your choice: "); scanf("%d", &choice);
+
+switch(choice){
+
+case 1: fcfs(sequence, head, n);
+
+break;
+
+case 2: sstf(sequence, head, n);
+
+break;
+
+case 3: scan(sequence, head, n, t);
+
+break;
+
+case 4: exit(0);
+
+break;}
+
+}while(1); printf("\n\n");}
+</textarea>
+</body>
+</html>
